@@ -1,9 +1,10 @@
 # markSixAgent
 Prediction to Mark Six with GenAI
 
-
-# test
+# Test
+```python
 python -m src.agents.mark_six_agent
+```
 
-
-**Note**: Every draw is random and independent. No strategy can change the odds, please treat Mark Six Agent as entertainment, not an investment.
+# Note
+Every draw is random and independent. No strategy can change the odds, please treat Mark Six Agent as entertainment, not an investment.
