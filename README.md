@@ -2,8 +2,17 @@
 Prediction to Mark Six with GenAI
 
 # Test
+**Backend**
+```python
+python -m src.mark_six
+```
+**Agent**
 ```python
 python -m src.agents.mark_six_agent
+```
+**Load History Data**
+```python
+python -m src.utils.load_history
 ```
 
 # Note

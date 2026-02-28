@@ -1,7 +1,8 @@
 def get_history(hist_limit=120) -> list[list[int]]:
     history = []
     delimiter = '|'
-    with open('memory/his_draw.txt', 'r') as file:
+    his_file_path = 'memory/hist_draw.txt'
+    with open(his_file_path, 'r') as file:
         for line in file:
             parts = line.strip().split(delimiter)
             if len(parts) == 3:

@@ -4,11 +4,11 @@ from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage
 from src.utils.get_history import get_history
 from src.tools.analyze_tools import *
+from src.utils.get_time import getTimeStamp
 
 
 DEFAULT_MODEL_NAME = 'x-ai/grok-beta'
 load_dotenv(os.path.join('config', '.env'))
-HIST_LIMIT = 120
 PREDICT_BALLS_NUM = 8
 
 llm = ChatOpenAI(
@@ -23,6 +23,7 @@ class MarkSixAgent:
         self.hist = hist
 
     def analyze(self) -> str:
+        print(f"[{getTimeStamp()}] Start MarkSixAgent analysis...")
         hot_numbers_top_5 = None
         cold_numbers_top_5 = None
         for tool in mark_six_tools:
@@ -31,8 +32,10 @@ class MarkSixAgent:
 
         user_prompt = f"""
 預測下一期六合彩號碼.
-最新{HIST_LIMIT}歷史數據(最後為最新數據):{self.hist}
+最新{len(self.hist)}歷史數據(最後為最新數據):{self.hist}
 """
+        # print(f"DEBUG user_prompt: {user_prompt}")
+
         sys_prompt = f"""
 你是一名六合彩分析師,根據歷史數據,透過以下策略進行推理分析,每種策略生成<=5個號碼,綜合後,預測下一期的六合彩號碼.返回1)前{PREDICT_BALLS_NUM}個高機率預測號碼(排序由機率高到低),並包含對應綜合機率,機率為號碼在多種策略中出現的次數/所有策略號碼總數;2)分析過程的詳細說明:
 - 七星矩陣:分析歷史數據中號碼在七星矩陣/旋轉矩陣/輪次矩陣,預測下一期可能出現的號碼.
@@ -63,7 +66,7 @@ class MarkSixAgent:
         return llm.invoke(messages).content
 
 if __name__ == "__main__":
-    hist = get_history(HIST_LIMIT)
+    hist = get_history(120)
     markSixAgent = MarkSixAgent(hist)
     result = markSixAgent.analyze()
-    print(f"{result}")
+    print(f"[{getTimeStamp()}] {result}")
