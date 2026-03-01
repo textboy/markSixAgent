@@ -19,9 +19,10 @@ llm = ChatOpenAI(
 )
 
 class MarkSixAgent:
-    def __init__(self, latest_draw_no, hist):
+    def __init__(self, latest_draw_no, hist, predict_hist):
         self.latest_draw_no = latest_draw_no
         self.hist = hist
+        self.predict_hist = predict_hist
     
     def create_predict_id(self) -> str:
         # sample draw_no format: '26/022'
@@ -45,7 +46,6 @@ class MarkSixAgent:
 
         user_prompt = f"""
 預測下一期六合彩號碼.
-最新{len(self.hist)}歷史數據(最後為最新數據):{self.hist}
 """
         # print(f"DEBUG user_prompt: {user_prompt}")
 
@@ -66,6 +66,14 @@ class MarkSixAgent:
 - 頭數分析:分析歷史數據中號碼的頭數特徵,預測下一期可能出現的頭數組合.
 - 合數分析:分析歷史數據中號碼的合數特徵(相對質數),預測下一期可能出現的合數組合.
 - 其它策略:根據歷史數據中的其他特徵和模式,預測下一期可能出現的號碼.
+基于最近1期预测数据(PREDICT_HIST),与实际数据(HIST)比较，根据实际调整预测策略和权重分配。
+說明:歷史數據(HIST)及歷史預測數據(PREDICT_HIST)最後都為最新數據.
+<HIST>
+{self.hist}
+</HIST>
+<PREDICT_HIST>
+{self.predict_hist}
+</PREDICT_HIST>
 返回:
 **predictID**
 {self.create_predict_id()}
