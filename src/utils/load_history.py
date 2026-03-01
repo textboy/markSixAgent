@@ -24,7 +24,11 @@ def load_history():
     with open(his_file_path, 'r', encoding='utf-8') as f:
         lines = f.readlines()
         if lines:
-            last_line = lines[-1].strip()
+            for i in range(-1, -11, -1):
+                # bypass the empty lines at the end of file if exist
+                if lines[i].strip():
+                    last_line = lines[i].strip()
+                    break
             last_draw_no = last_line.split(delimiter)[0]
             print(f"[{getTimeStamp()}] The last Draw No of history memory is: {last_draw_no}")
 
@@ -80,6 +84,7 @@ def load_history():
 
     # Write accumulated draws to file
     if len(draws) > 0:
+        # sort the draws by draw_no in ascending order before writing to file
         sorted_draws = sorted(draws, key=lambda x: x['draw_no'])
         with open(his_file_path, 'a', encoding='utf-8') as f:
             for draw in sorted_draws:

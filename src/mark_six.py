@@ -2,6 +2,7 @@ from src.utils.load_history import load_history
 from src.utils.get_history import get_history
 from src.agents.mark_six_agent import MarkSixAgent
 from src.utils.get_time import getTimeStamp
+from src.utils.write_result import write_result
 
 
 HIST_LIMIT = 120
@@ -14,6 +15,7 @@ def main():
     latest_draw_no, hist = get_history(HIST_LIMIT)
     markSixAgent = MarkSixAgent(latest_draw_no, hist)
     result = markSixAgent.analyze()
+    write_result(latest_draw_no, result)
     print(f"[{getTimeStamp()}] {result}")
 
 if __name__ == "__main__":
