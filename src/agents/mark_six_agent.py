@@ -19,8 +19,21 @@ llm = ChatOpenAI(
 )
 
 class MarkSixAgent:
-    def __init__(self, hist):
+    def __init__(self, latest_draw_no, hist):
+        self.latest_draw_no = latest_draw_no
         self.hist = hist
+    
+    def create_predict_id(self) -> str:
+        # sample draw_no format: '26/022'
+        if self.latest_draw_no is not None:
+            latest_draw_no_yr = self.latest_draw_no.split('/')[0]
+            latest_draw_no_no = self.latest_draw_no.split('/')[-1]
+            if int(latest_draw_no_no) >= 133:
+                print("WARN: latest_draw_no_no exceeds 133, may be going to update the predict manually to support crossing year.")
+            return f"{latest_draw_no_yr}/{(int(latest_draw_no_no) + 1):03d}"  # Increment the numeric part and format it with leading zeros
+        else:
+            print("ERROR: latest_draw_no is None")
+            exit(1)
 
     def analyze(self) -> str:
         print(f"[{getTimeStamp()}] Start MarkSixAgent analysis...")
@@ -54,6 +67,8 @@ class MarkSixAgent:
 - 合數分析:分析歷史數據中號碼的合數特徵(相對質數),預測下一期可能出現的合數組合.
 - 其它策略:根據歷史數據中的其他特徵和模式,預測下一期可能出現的號碼.
 返回格式範例:
+**PredictID**
+{self.create_predict_id()}
 **result**
 1(15%),2(10%),3(8%),4(8%),5(4.3%),6(0.2%),7(0.1%),8(0.1%)
 **reasoning procedure**
@@ -66,7 +81,9 @@ class MarkSixAgent:
         return llm.invoke(messages).content
 
 if __name__ == "__main__":
-    hist = get_history(120)
-    markSixAgent = MarkSixAgent(hist)
+    latest_draw_no, hist = get_history(120)
+    markSixAgent = MarkSixAgent(latest_draw_no, hist)
+    # predict_id = markSixAgent.create_predict_id()
+    # print(f"[{getTimeStamp()}] PredictID: {predict_id}")
     result = markSixAgent.analyze()
     print(f"[{getTimeStamp()}] {result}")

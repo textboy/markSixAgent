@@ -11,8 +11,8 @@ def main():
     load_history()
     
     # Predict mark six result
-    hist = get_history(HIST_LIMIT)
-    markSixAgent = MarkSixAgent(hist)
+    latest_draw_no, hist = get_history(HIST_LIMIT)
+    markSixAgent = MarkSixAgent(latest_draw_no, hist)
     result = markSixAgent.analyze()
     print(f"[{getTimeStamp()}] {result}")
 
